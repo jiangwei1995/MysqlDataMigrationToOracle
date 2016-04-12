@@ -15,8 +15,7 @@ async.parallel([
      importTools.executeSrcipt("ctl/im_saleout.ctl").then(function(result){
        callback(null,result);
      })
-   }]
-},function(err,result){
+   }],function(err,result){
   console.log(result);
   console.timeEnd("exec-date");
 })
