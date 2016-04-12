@@ -12,7 +12,7 @@ async.parallel([
       callback(null,result);
     })
   },function(callback){
-     importTools.executeSrcipt("ctl/im_saleout.ctl").then(function(result){
+     importTools.executeSrcipt("ctl/im_saleout2.ctl").then(function(result){
        callback(null,result);
      })
    }],function(err,result){
