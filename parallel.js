@@ -6,9 +6,16 @@ var process = require('child_process');
 var importTools = require('./importTools');
 
 console.time("exec-date");
-async.parallel({
-  1:importTools.executeSrcipt("ctl/im_saleout1.ctl"),
-  2:importTools.executeSrcipt("ctl/im_saleout2.ctl")
+async.parallel([
+ function(callback){
+    importTools.executeSrcipt("ctl/im_saleout1.ctl").then(result){
+      callback(err,result);
+    }
+  },function(callback){
+     importTools.executeSrcipt("ctl/im_saleout.ctl").then(result){
+       callback(err,result);
+     }
+   }]
 },function(result){
   console.log(result);
   console.timeEnd("exec-date");
