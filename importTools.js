@@ -65,7 +65,7 @@ this.generateSrcipt = function(tableName){
           'VIP_CODE)';
 
     var arr = iconv.encode(str, 'utf-8');
-    fs.appendFile(fileName, arr, function(err){
+    fs.writeFile(fileName, arr, function(err){
           if(err){
             console.log("fail " + err);
             reject(fileName+"500");
