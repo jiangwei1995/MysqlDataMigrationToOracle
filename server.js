@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var process = require('child_process');
 var max_table_name = require('./min_table_name');
 var exportTools = require('./exportTools');
+var importTools = require('./importTools');
 //var app = express();
 //app.listen(1337);
 var number = 10;
@@ -19,7 +20,7 @@ var number = 10;
 //     res.send(result);
 //   });
 // })
-
+importTools.importCsv("im_sale");
 function start(){
   console.time("exec-date");
   var tasks =  _.reduce(returnArrData("IM_SALESUMDATA",40),function(mome,item){
@@ -94,4 +95,4 @@ function returnArrData(tableName,tableSum){
 //   });
 //
 // }
-start();
+//start();
