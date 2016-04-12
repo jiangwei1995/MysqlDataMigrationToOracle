@@ -13,6 +13,7 @@
     "async": "^2.0.0-rc.2",
     "bluebird": "^3.3.4",
     "express": "^4.13.4",
+    "iconv-lite": "^0.4.13",
     "lodash": "^4.7.0"
   }
 }

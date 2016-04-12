@@ -20,7 +20,11 @@ var number = 10;
 //     res.send(result);
 //   });
 // })
-importTools.importCsv("im_sale");
+console.time("exec-date");
+importTools.importCsv("im_sale").then(function(result){
+  console.log(result);
+console.timeEnd("exec-date");
+});
 function start(){
   console.time("exec-date");
   var tasks =  _.reduce(returnArrData("IM_SALESUMDATA",40),function(mome,item){
