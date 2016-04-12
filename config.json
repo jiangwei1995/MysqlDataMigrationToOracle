@@ -1,0 +1,14 @@
+{"mysql":{
+  "host":"192.168.0.200",
+  "port":"3306",
+  "userName":"root",
+  "password":"eteng",
+  "dbName":"ctrm_develop"
+  },
+  "oracle":{
+    "host":"192.168.0.90",
+    "port":"1521",
+    "userName":"etdj",
+    "password":"etdj",
+    "sid":""
+    }}
