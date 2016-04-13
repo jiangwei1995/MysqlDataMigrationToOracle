@@ -1,0 +1,70 @@
+[
+    {
+        "tableName": "IM_SALESUMDATA",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_SALEOUT_B",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_SALEOUT",
+        "sumLine": 200
+    },
+    {
+        "tableName": "CHANNEL_ANAIYSIS_TWO",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_PURCHASE_B",
+        "sumLine": 200
+    },
+    {
+        "tableName": "ST_SUBCURRENTSTOCK",
+        "sumLine": 200
+    },
+    {
+        "tableName": "ST_CURRENTSTOCK",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_ALLOOUT_B",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_PURCHASE",
+        "sumLine": 200
+    },
+    {
+        "tableName": "IM_ALLOOUT",
+        "sumLine": 200
+    },
+    {
+        "tableName": "CHANNEL_BANDCHANNEL",
+        "sumLine": 200
+    },
+    {
+        "tableName": "CHANNEL_NUMBERCHANNEL",
+        "sumLine": 200
+    },
+    {
+        "tableName": "CHANNEL_FOURGCHANNEL",
+        "sumLine": 200
+    },
+    {
+        "tableName": "BD_STORDOC",
+        "sumLine": 200
+    },
+    {
+        "tableName": "CHANNEL_RANKING",
+        "sumLine": 200
+    },
+    {
+        "tableName": "BD_DEPACTIVITIES_B",
+        "sumLine": 200
+    },
+    {
+        "tableName": "PUB_FUNPOWER",
+        "sumLine": 200
+    }
+]

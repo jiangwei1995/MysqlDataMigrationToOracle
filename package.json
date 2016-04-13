@@ -14,6 +14,7 @@
     "bluebird": "^3.3.4",
     "express": "^4.13.4",
     "iconv-lite": "^0.4.13",
-    "lodash": "^4.7.0"
+    "lodash": "^4.7.0",
+    "node-mysql": "^0.4.2"
   }
 }

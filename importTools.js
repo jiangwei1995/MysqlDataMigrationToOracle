@@ -2,7 +2,6 @@ var _ = require('lodash');
 var async = require('async');
 var Promise = require('bluebird');
 var process = require('child_process');
-var max_table_name = require('./min_table_name');
 var fs = require('fs');
 var iconv = require('iconv-lite');
 var em = this;

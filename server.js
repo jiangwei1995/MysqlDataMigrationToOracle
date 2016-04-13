@@ -3,45 +3,34 @@ var _ = require('lodash');
 var async = require('async');
 var Promise = require('bluebird');
 var process = require('child_process');
-var max_table_name = require('./min_table_name');
 var exportTools = require('./exportTools');
 var importTools = require('./importTools');
-//var app = express();
-//app.listen(1337);
-var number = 10;
-// app.get('/', function (req, res) {
-//   console.time("marker-elements");
-//   var tasks =  _.reduce(returnArrData("IM_SALEOUT",1892913),function(mome,item){
-//     mome.push(returnPromiseArr(item.tableName, item.start, number, item.csvName));
-//     return mome;
-//   },[]);
-//   Promise.all(tasks).then(function(result){
-//     console.timeEnd("marker-elements");
-//     res.send(result);
-//   });
-// })
-console.time("exec-date");
-importTools.importCsv("im_sale").then(function(result){
-  console.log(result);
-console.timeEnd("exec-date");
-});
+var config = require('./config.json');
+var fs = require('fs');
+var tableArr = require('./exportTableName');
+var number = 1000000;
+
+
 function start(){
   console.time("exec-date");
-  var tasks =  _.reduce(returnArrData("IM_SALESUMDATA",40),function(mome,item){
-    mome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
-    return mome;
+  var tasks = _.reduce(tableArr,function(tmp,parent){
+    var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
+      itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
+      return itemMome;
+    },[]);
+    tmp.push(itemTasks);
+    return tmp;
   },[]);
-  Promise.all(tasks).then(function(result){
-
+  console.log(_.flatten(tasks).length);
+  Promise.all(_.flatten(tasks)).then(function(result){
     console.log(result);
     console.timeEnd("exec-date");
-    //res.send(result);
   });
 }
 
 function start1(){
   console.time("exec-date");
-  var tasks =  _.reduce(returnArrData("IM_SALEOUT",1892913),function(mome,item){
+  var tasks =  _.reduce(returnArrData("IM_SALEOUT",10000),function(mome,item){
     mome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
     return mome;
   },[]);
@@ -57,46 +46,18 @@ function returnArrData(tableName,tableSum){
   return _.reduce(new Array(Math.ceil(tableSum/number)),function(mome, item, index){
     var start = number*index;
     var end = number*(index+1);
-    mome.push({"tableName":tableName, "start":start, "end":end, "csvName":"csv/"+tableName + "-" + start + "-" + end + ".csv"});
+    mome.push({"tableName":tableName, "start":start, "end":end, "csvName":`csv/${tableName}-${start}-${end}.csv`});
     return mome;
   },[])
 }
-// function returnPromiseArr(tablename,start,number,csvname){
-//   console.log('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tablename+' limit '+start+','+  number +';" | sed \'s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' >> csv/'+csvname);
-//   return new Promise(function (resolve, reject) {
-//     process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tablename+' limit '+start+','+ number +';" | sed \'s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' >> csv/'+csvname,
-//       function(error, stdout, stderr){
-//         if (error !== null) {
-//           console.log('exec error: ' + error);
-//           reject(tablename+"500");
-//         }
-//         console.log(csvname);
-//         //filterEmpty(csvname);
-//         resolve(tablename+"200");
-//     });
-//   });
-// }
-// function filterEmpty(csvname){
-//     process.exec('sed \'s/"NULL"//g\' csv/'+ csvname +' > csv/'+ csvname +'.bak',
-//       function(error, stdout, stderr){
-//         if (error !== null) {
-//
-//         }
-//         console.log(csvname,"过滤空后文件名为",csvname, ".bak");
-//       })
-// }
-// function exportCsv(tableName,tableSum){
-//   return new Promise(function (resolve, reject) {
-//     process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+';" | sed \'s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > csv/'+tableName+'.csv',
-//       function(error, stdout, stderr){
-//         if (error !== null) {
-//           console.log('exec error: ' + error);
-//           reject(tableName+"500");
-//         }
-//         console.log(tableName);
-//         resolve(tableName+"200");
-//     });
-//   });
-//
-// }
-//start();
+
+function generateJson(){
+  exportTools.generateJson(`select UPPER(table_name) as tableName,table_rows as sumLine from tables where TABLE_SCHEMA = '${config.mysql.dbName}'  and table_rows>100000 order by sumLine DESC;`).then(function(result){
+    fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
+      if (err) throw err;
+      console.log("generateJson-Scuess");
+    })
+  })
+}
+start();
+//generateJson();
