@@ -60,7 +60,7 @@ function generateExportJson(){
 }
 //生成导入需要的json 内容包含 表名，列名
 function generateImportJson(){
-  exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+  exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
     fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
       if (err) throw err;
       console.log("generateJson-Scuess");
