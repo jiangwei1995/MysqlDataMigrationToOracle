@@ -12,9 +12,10 @@ this.query = function(sql){
     conn.connect();
     conn.query(sql, function(err, rows, fields) {
       if (err) throw err;
+          conn.end();
           resolve(rows);
        });
-    conn.end();
+
   })
 }
 exports.query = this.query;

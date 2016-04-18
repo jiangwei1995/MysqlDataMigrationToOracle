@@ -18,50 +18,18 @@ exports.importCsv = function(tableName){
   });
 }
 
-this.generateSrcipt = function(tableName){
+this.generateSrcipt = function(tableName,columns,files){
   return new Promise(function(resolve,reject){
-    var fileName = "ctl/"+tableName+".ctl";
+    var fileName = `ctl/${tableName}.ctl`;
     var str ='load data \r';
-          str += 'infile '+'\'/home/oracle/IM_SALEOUT-0-1000000.csv.bak\''+' \r';
-          str += 'infile '+'\'/home/oracle/IM_SALEOUT-1000000-2000000.csv.bak\''+' \r';
-          str += 'append into table "' + 'IM_SALEOUT' + '" \r';
+          for (var i = 0; i < files.length; i++) {
+             str += `infile 'csv/${files[i]}' \r`;
+          }
+          str += `append into table "${tableName}" \r`;
           str += 'fields terminated by \',\' \r';
           str += 'OPTIONALLY ENCLOSED BY \'"\'\r';
           str += 'TRAILING NULLCOLS \r';
-          str +='(BILLID,'+
-          'BILLCODE,'+
-          'BILLDATE,'+
-          'BUSINESS_TYPE,'+
-          'BILLSTATE,'+
-          'DEP_ACT_ID,'+
-          'PK_STORDOC,'+
-          'MAKER,'+
-          'SIGNATORY,'+
-          'MAKE_DATE,'+
-          'SIGNATORY_DATE,'+
-          'REMARK,'+
-          'TS,'+
-          'CORP_ID,'+
-          'TEMP_VAR2,'+
-          'TEMP_VAR1,'+
-          'TEMP_VAR3,'+
-          'TEMP_VAR4,'+
-          'TEMP_VAR5,'+
-          'TEMP_VAR6,'+
-          'TEMP_VAR7,'+
-          'TEMP_INT3,'+
-          'TEMP_INT2,'+
-          'TEMP_INT1,'+
-          'IS_BINDSALE,'+
-          'SALE_TYPE,'+
-          'PRO_ID,'+
-          'BSISTORCODE,'+
-          'CASH_MONEY,'+
-          'CARD_MONEY,'+
-          'SUM_MONEY,'+
-          'AUDIT_DATE,'+
-          'AUDITOR,'+
-          'VIP_CODE)';
+          str +=`(${columns})`;
 
     var arr = iconv.encode(str, 'utf-8');
     fs.writeFile(fileName, arr, function(err){

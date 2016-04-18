@@ -8,7 +8,7 @@ var importTools = require('./importTools');
 var config = require('./config.json');
 var fs = require('fs');
 var tableArr = require('./exportTableName');
-var number = 1000000;
+var number = 100;
 
 
 function start(){
@@ -38,7 +38,6 @@ function start1(){
 
     console.log(result);
     console.timeEnd("exec-date");
-    //res.send(result);
   });
 }
 
@@ -51,7 +50,7 @@ function returnArrData(tableName,tableSum){
   },[])
 }
 
-function generateJson(){
+function generateExportJson(){
   exportTools.generateJson(`select UPPER(table_name) as tableName,table_rows as sumLine from tables where TABLE_SCHEMA = '${config.mysql.dbName}'  and table_rows>100000 order by sumLine DESC;`).then(function(result){
     fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
       if (err) throw err;
@@ -59,5 +58,46 @@ function generateJson(){
     })
   })
 }
-start();
-//generateJson();
+
+function generateImportJson(){
+  exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+    fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
+      if (err) throw err;
+      console.log("generateJson-Scuess");
+      generateImportJsonFiles();
+    })
+  })
+}
+function generateImportJsonFiles(){
+  var importTableArr = require('./importTableName');
+  fs.readdir('csv/',function(err,files){
+    var newArr =   _.reduce(importTableArr,function(mome,item){
+        var arr = indexOfToArr(files,item.tableName);
+        item['files'] = arr;
+        mome.push(item);
+        return mome;
+      },[])
+    fs.writeFile('importTableName.json',JSON.stringify(newArr,null,4),function(err){
+      if (err) throw err;
+      console.log("generateJson-Scuess");
+    })
+  })
+}
+function indexOfToArr(arr,str){
+  return _.reduce(arr,function(mome,item){
+    if(item.indexOf(str+"-")>-1&&item.lastIndexOf('.bak')>-1){
+      mome.push(item);
+    }
+    return mome;
+  },[])
+}
+function generateCtl(){
+  var importTableArr = require('./importTableName');
+  for (var i = 0; i < importTableArr.length; i++) {
+    importTools.generateSrcipt(importTableArr[i].tableName,importTableArr[i].columns,importTableArr[i].files)
+  }
+}
+//start();
+//generateExportJson();
+//generateImportJson();
+generateCtl();
