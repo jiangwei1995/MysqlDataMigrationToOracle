@@ -102,6 +102,7 @@ function generateCtl(){
 }
 
 function executeCtl(){
+   console.time("exec-date");
    console.log("files");
    fs.readdir('ctl/',function(err,files){
      var tasks = _.reduce(files,function(mome,file){
@@ -110,6 +111,7 @@ function executeCtl(){
      },[]);
      Promise.all(tasks).then(function(result){
        console.log(result);
+       console.timeEnd("exec-date");
      })
    })
 }
@@ -117,5 +119,5 @@ function executeCtl(){
 //generateExportJson();
 //generateImportJson();
 //generateCtl();
-//executeCtl();
-exports.a = executeCtl;
+executeCtl();
+//exports.a = executeCtl;
