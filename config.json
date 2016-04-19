@@ -12,5 +12,12 @@
     "userName":"etdj",
     "password":"etdj",
     "sid":""
+  },
+  "server":{
+    "host":"192.168.0.90",
+    "port":"22",
+    "userName":"oracle",
+    "from":"csv.tar",
+    "to":"/home/oracle/MysqlDataMigrationToOracle/csv"
   }
 }

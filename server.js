@@ -28,6 +28,63 @@ function start(){
   });
 }
 
+function exportCsv(){
+  return new Promise(function(resolve,reject){
+    var tableArr = require('./exportTableName');
+
+    var tasks = _.reduce(tableArr,function(tmp,parent){
+      var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
+        itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
+        return itemMome;
+      },[]);
+      tmp.push(itemTasks);
+      return tmp;
+    },[]);
+    console.log(_.flatten(tasks).length);
+    Promise.all(_.flatten(tasks)).then(function(result){
+      resolve(200);
+    },function(err){
+      reject(500);
+    });
+  })
+}
+
+function exportCsvToServer(){
+  console.time("exec-date-sum");
+   async.series({
+     "task1":function(done){
+       console.time("exec-date-task1");
+       exportCsv().then(function(result){
+         console.timeEnd("exec-date-task1");
+         done(null,result)
+       },function(err){
+         done(err)
+       });
+     },
+     "task2":function(done){
+       console.time("exec-date-task2");
+       exportTools.compressCsv().then(function(result){
+        console.timeEnd("exec-date-task2");
+         done(null,result)
+       },function(err){
+         done(err)
+       })
+     },
+     "task3":function(done){
+       console.time("exec-date-task3");
+       exportTools.scpCsvToServer().then(function(result){
+         console.timeEnd("exec-date-task3");
+         done(null,result)
+       },function(err){
+         done(err)
+       })
+     }
+   },function(err,result){
+     console.log(result);
+     console.timeEnd("exec-date-sum");
+   })
+}
+
 function start1(){
   console.time("exec-date");
   var tasks =  _.reduce(returnArrData("IM_SALEOUT",10000),function(mome,item){
@@ -115,9 +172,10 @@ function executeCtl(){
      })
    })
 }
+exportCsvToServer();
 //start();
 //generateExportJson();
-generateImportJson();
+//generateImportJson();
 //generateCtl();
 //executeCtl();
 //exports.a = executeCtl;
