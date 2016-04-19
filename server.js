@@ -7,11 +7,11 @@ var exportTools = require('./exportTools');
 var importTools = require('./importTools');
 var config = require('./config.json');
 var fs = require('fs');
-var tableArr = require('./exportTableName');
 var number = 100;
 
 // 生成csv文件
 function start(){
+  var tableArr = require('./exportTableName');
   console.time("exec-date");
   var tasks = _.reduce(tableArr,function(tmp,parent){
     var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
