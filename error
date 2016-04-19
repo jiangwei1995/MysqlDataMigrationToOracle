@@ -1,0 +1,23 @@
+sqlldr etdj/etdj@etda control=ctl/BD_DEPACTIVITIES_B.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/BD_STORDOC.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/CHANNEL_ANAIYSIS_TWO.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/CHANNEL_BANDCHANNEL.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/CHANNEL_FOURGCHANNEL.ctl direct=true
+
+Record 67056: Rejected - Error on table "CHANNEL_FOURGCHANNEL", column CHANNELNAME.
+no terminator found after TERMINATED and ENCLOSED field
+Record 93784: Rejected - Error on table "CHANNEL_FOURGCHANNEL", column CHANNELNAME.
+no terminator found after TERMINATED and ENCLOSED field
+
+sqlldr etdj/etdj@etda control=ctl/CHANNEL_NUMBERCHANNEL.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/CHANNEL_RANKING.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_ALLOOUT.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_ALLOOUT_B.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_PURCHASE.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_PURCHASE_B.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_SALEOUT.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_SALEOUT_B.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/IM_SALESUMDATA.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/PUB_FUNPOWER.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/ST_CURRENTSTOCK.ctl direct=true
+sqlldr etdj/etdj@etda control=ctl/ST_SUBCURRENTSTOCK.ctl direct=true

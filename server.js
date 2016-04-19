@@ -117,7 +117,7 @@ function executeCtl(){
 }
 //start();
 //generateExportJson();
-//generateImportJson();
+generateImportJson();
 //generateCtl();
-executeCtl();
+//executeCtl();
 //exports.a = executeCtl;

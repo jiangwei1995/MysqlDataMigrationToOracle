@@ -7,7 +7,7 @@ var mysqlPool = require('./mysqlPool');
 
 this.exportCsv = function(tableName,start,number,csvPath){
   return new Promise(function(resolve,reject){
-    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+' limit '+start+','+ number +';" | sed \'s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
+    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+' limit '+start+','+ number +';" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);
@@ -32,7 +32,7 @@ this.generateJson = function(sql){
 
 exports.fullDataExportCsv = function(tableName,csvPath){
   return new Promise(function(resolve,reject){
-    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+';" | sed \'s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
+    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+';" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
       function(error, stdout, stderr){
         if (error !== null) {
           console.log('exec error: ' + error);
