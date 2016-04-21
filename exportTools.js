@@ -53,7 +53,7 @@ this.scpCsvToServer = function(){
 //生成导出需要的json文件
 this.generateJson = function(sql){
   return new Promise(function(resolve,reject){
-    mysqlPool.query(sql).then(function(result){
+    mysqlPool.poolQuery(sql).then(function(result){
       resolve(result);
     },function(err){
       reject(err);

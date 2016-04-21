@@ -2,6 +2,7 @@
     {
         "tableName": "BD_DEPACTIVITIES_B",
         "columns": "DEPACTIVITIESB_ID,DEPACTIVITIES_ID,PK_INVBASDOC,PRICE,TS,CORP_ID,TEMP_VAR1,TEMP_VAR2,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_INT1,TEMP_INT2,TEMP_INT3",
+        "nullcolumns": "DEPACTIVITIESB_ID",
         "files": [
             "BD_DEPACTIVITIES_B-0-100.csv.bak",
             "BD_DEPACTIVITIES_B-100-200.csv.bak"
@@ -10,6 +11,7 @@
     {
         "tableName": "BD_STORDOC",
         "columns": "PK_STORDOC,STORCODE,STORNAME,PK_CALBODY,FILIALE_ID,AREA_ID,DISTRICT_ID,CHANTYPE_ID,IS_OTHERCHAN,CUSBASDOC_ID,ADDRESS,PRINCIPAL,CONTACT,REMARK,CORP_ID,TS,TEMP_VAR1,TEMP_VAR2,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT1,TEMP_INT2,TEMP_INT3,IS_UPLOAD,IS_COMPLEMENT,MOST,COMPLEMENT,WANTED,SHOPCODE,COMPANY_ID,CHANNELTYPE,SHOPTYPE,SHOPATTRIBUTE_ID,SHOPSTATUS,SHOPLEVEL,IS_UPLOADSUC,IS_SD,OWNERTYPE,IS_SM,IN_CHANNEL,IN_DATE,COOPERATE_CODE,COOPERATE_NAME,STORTYPE,BANK_ACCOUNT_INFORMATION,BANK_ACCOUNT,ACCOUNT_NAME,ACCOUNT,ISPL,PL_STORDOC,UP_LOGISTICS,ISCHANEL,ISORG,STORSHORT,ISLOG,isrepaire,istembus,channel_typeb,zsbj,mturl,bjurl,project_type,busi_attr,is_district,channel_userid,selection_billcode,channeltype_id,channeltype_sub_id,channeltype_third_id,en_name,short_name,estate_source,distributor_id,phone,city_code,county_code,area_sale_center_code,town_code,village_code,updistributor_id,business_id,isinnet,nettype,manage_mode,is_other,position_type,area_shape,society_channel_star,chain_channel,opendate,open_user,agreementnum,agreementname,signed_date,saler_code,saler_name,payer_sort,tax_method,entry_sky,is_replace,lease_price,leasebegin_date,leaseend_date,buy_price,buildingarea,busitype,outdoorimg_path,indoorimg_path,facedoorimg_path,backimg_path,is_electronics,is_grid,business_area,seat_count,saler_count,channel_deposit,margin,margin_type,idtype,linkphone,area_sale_center_name,town_name,village_name,area,manager_phone,create_time,billstate,make_date,pact_code,pact_name,city_name,county_name,business_name,market_type,qd_code,attachment",
+        "nullcolumns": "PK_STORDOC,STORCODE,STORNAME,ISPL,ISCHANEL",
         "files": [
             "BD_STORDOC-0-100.csv.bak",
             "BD_STORDOC-100-200.csv.bak"
@@ -50,6 +52,7 @@
     {
         "tableName": "CHANNEL_RANKING",
         "columns": "channel_id,channel_userid,channel_name,storcode,storname,starlevel,subject,remuneration,samestar,countyranking,cityranking,growth,ts,corp_id,temp_int1,temp_int2,temp_int3,temp_int4,temp_var1,temp_var2,temp_var3",
+        "nullcolumns": "channel_id",
         "files": [
             "CHANNEL_RANKING-0-100.csv.bak",
             "CHANNEL_RANKING-100-200.csv.bak"
@@ -58,6 +61,7 @@
     {
         "tableName": "IM_ALLOOUT",
         "columns": "notify_id,billid,billcode,billstate,pk_stordoc,in_pk_stordoc,maker,make_date,billdate,remark,corp_id,ts,temp_var1,temp_var2,temp_var3,temp_var4,temp_var5,temp_int1,temp_int2,temp_int3,business_type,agency_id,signatory,signatory_date",
+        "nullcolumns": "billid,billcode,billstate,pk_stordoc,in_pk_stordoc,maker,make_date,billdate,corp_id,ts",
         "files": [
             "IM_ALLOOUT-0-100.csv.bak",
             "IM_ALLOOUT-100-200.csv.bak"
@@ -66,6 +70,7 @@
     {
         "tableName": "IM_ALLOOUT_B",
         "columns": "billid,billid_b,pk_invbasdoc,quantity,remark,corp_id,ts,temp_var1,temp_var2,temp_var3,temp_var4,temp_var5,temp_int1,temp_int2,temp_int3,in_quantity",
+        "nullcolumns": "billid_b,pk_invbasdoc,quantity,corp_id,ts",
         "files": [
             "IM_ALLOOUT_B-0-100.csv.bak",
             "IM_ALLOOUT_B-100-200.csv.bak"
@@ -74,14 +79,15 @@
     {
         "tableName": "IM_PURCHASE",
         "columns": "BILLID,BILLCODE,BILLDATE,BUSI_ID,PK_CUM,PK_STORDOC,MAKER,SIGNATORY,REMARK,CORP_ID,last_billid,TEMP_VAR2,TEMP_VAR1,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT3,TEMP_INT2,TEMP_INT1,TS,MAKE_DATE,CHECK_DATE,BILLSTATE,BUSINESS_TYPE,re_billcode,allo_pk_stordoc,purchase_type,agency_id,ORDER_CODE,is_del_agency",
+        "nullcolumns": "BILLID,BILLCODE,BILLDATE,PK_CUM,PK_STORDOC",
         "files": [
-            "IM_PURCHASE-0-100.csv.bak",
-            "IM_PURCHASE-100-200.csv.bak"
+            "IM_PURCHASE-0-1000000.csv.bak"
         ]
     },
     {
         "tableName": "IM_PURCHASE_B",
         "columns": "BILLID,BILLID_B,PK_INVBASDOC,QUANTITY,BACK_REASON,FLOW_NUM,REMARK,CORP_ID,TEMP_VAR2,TEMP_VAR1,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT3,TEMP_INT2,TEMP_INT1,TS,pl_quantity,in_quantity",
+        "nullcolumns": "BILLID_B,PK_INVBASDOC",
         "files": [
             "IM_PURCHASE_B-0-100.csv.bak",
             "IM_PURCHASE_B-100-200.csv.bak"
@@ -90,6 +96,7 @@
     {
         "tableName": "IM_SALEOUT",
         "columns": "BILLID,BILLCODE,BILLDATE,BUSINESS_TYPE,BILLSTATE,DEP_ACT_ID,PK_STORDOC,MAKER,SIGNATORY,MAKE_DATE,SIGNATORY_DATE,REMARK,TS,CORP_ID,TEMP_VAR2,TEMP_VAR1,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT3,TEMP_INT2,TEMP_INT1,IS_BINDSALE,SALE_TYPE,PRO_ID,BSISTORCODE,CASH_MONEY,CARD_MONEY,SUM_MONEY,AUDIT_DATE,AUDITOR,VIP_CODE",
+        "nullcolumns": "BILLID,BILLCODE,BILLDATE,PK_STORDOC",
         "files": [
             "IM_SALEOUT-0-100.csv.bak",
             "IM_SALEOUT-100-200.csv.bak"
@@ -98,6 +105,7 @@
     {
         "tableName": "IM_SALEOUT_B",
         "columns": "BILLID,BILLID_B,PK_INVBASDOC,QUANTITY,CRM_BUSI,PHONE_NO,CRM_OP_NO,REMARK,FLAG,TS,CORP_ID,TEMP_VAR2,TEMP_VAR1,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT3,TEMP_INT2,TEMP_INT1,DEF_VAR1,DEF_VAR2,DEF_VAR3,DEF_VAR4,DEF_VAR5,DEF_VAR6,DEF_VAR7,DEF_VAR8,DEF_VAR9,DEF_VAR10,DEF_VAR11,DEF_VAR12,DEF_VAR13,DEF_VAR14,DEF_VAR15,SALE_MONEY,DISCOUNT",
+        "nullcolumns": "BILLID_B,PK_INVBASDOC",
         "files": [
             "IM_SALEOUT_B-0-100.csv.bak",
             "IM_SALEOUT_B-100-200.csv.bak"
@@ -106,22 +114,16 @@
     {
         "tableName": "IM_SALESUMDATA",
         "columns": "data_id,pk_stordoc,depactivities_id,pk_invbasdoc,color_id,sale_date,is_digital,sale_sum,remark,corp_id,ts,temp_var1,temp_var2,temp_var3,temp_var4,temp_var5,temp_int1,temp_int2,temp_int3",
+        "nullcolumns": "data_id,pk_stordoc,pk_invbasdoc,sale_date",
         "files": [
             "IM_SALESUMDATA-0-100.csv.bak",
             "IM_SALESUMDATA-100-200.csv.bak"
         ]
     },
     {
-        "tableName": "PUB_FUNPOWER",
-        "columns": "POWER_ID,USERANDCORP_ID,GROUP_ID,FUN_ID,TEMP_VAR1,TEMP_VAR2,TEMP_VAR3,TEMP_INT1,TEMP_INT2,TS",
-        "files": [
-            "PUB_FUNPOWER-0-100.csv.bak",
-            "PUB_FUNPOWER-100-200.csv.bak"
-        ]
-    },
-    {
         "tableName": "ST_CURRENTSTOCK",
         "columns": "PK_INV_STATUES,PK_INVBASDOC,PK_WAREHOUSE,UNSALE,USER_BACK,USER_SAVE,BROKEN_BEFORE,BORKEN_AFTER,EX_CHECK,BORROW,EXCHANGE,DEMONSTRATE,SUM,CORP_ID,TS,DR,TEMP_VAR1,TEMP_VAR2,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT1,TEMP_INT2,TEMP_INT3,AVAILABLE_SUM",
+        "nullcolumns": "PK_INV_STATUES,PK_INVBASDOC,PK_WAREHOUSE",
         "files": [
             "ST_CURRENTSTOCK-0-100.csv.bak",
             "ST_CURRENTSTOCK-100-200.csv.bak"
@@ -130,6 +132,7 @@
     {
         "tableName": "ST_SUBCURRENTSTOCK",
         "columns": "PK_SUBSTOCK,PK_INVBASDOC,PK_WAREHOUSE,PK_COLOR,UNSALE,DEMONSTRATE,USER_SAVE,BROKEN_BEFORE,BORKEN_AFTER,EX_CHECK,IS_DIGITAL,CORP_ID,TS,SUM",
+        "nullcolumns": "PK_SUBSTOCK,PK_INVBASDOC,PK_WAREHOUSE,PK_COLOR",
         "files": [
             "ST_SUBCURRENTSTOCK-0-100.csv.bak",
             "ST_SUBCURRENTSTOCK-100-200.csv.bak"

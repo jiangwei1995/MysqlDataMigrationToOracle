@@ -21,3 +21,112 @@ sqlldr etdj/etdj@etda control=ctl/IM_SALESUMDATA.ctl direct=true
 sqlldr etdj/etdj@etda control=ctl/PUB_FUNPOWER.ctl direct=true
 sqlldr etdj/etdj@etda control=ctl/ST_CURRENTSTOCK.ctl direct=true
 sqlldr etdj/etdj@etda control=ctl/ST_SUBCURRENTSTOCK.ctl direct=true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@eteng MysqlDataMigrationToOracle]# node server.js
+24
+csv/PUB_FUNPOWER-0-1000000.csv 过滤空后文件名为 csv/PUB_FUNPOWER-0-1000000.csv.bak
+csv/BD_DEPACTIVITIES_B-0-1000000.csv 过滤空后文件名为 csv/BD_DEPACTIVITIES_B-0-1000000.csv.bak
+csv/CHANNEL_FOURGCHANNEL-0-1000000.csv 过滤空后文件名为 csv/CHANNEL_FOURGCHANNEL-0-1000000.csv.bak
+csv/CHANNEL_NUMBERCHANNEL-0-1000000.csv 过滤空后文件名为 csv/CHANNEL_NUMBERCHANNEL-0-1000000.csv.bak
+csv/CHANNEL_BANDCHANNEL-0-1000000.csv 过滤空后文件名为 csv/CHANNEL_BANDCHANNEL-0-1000000.csv.bak
+csv/IM_ALLOOUT_B-0-1000000.csv 过滤空后文件名为 csv/IM_ALLOOUT_B-0-1000000.csv.bak
+csv/CHANNEL_RANKING-0-1000000.csv 过滤空后文件名为 csv/CHANNEL_RANKING-0-1000000.csv.bak
+csv/BD_STORDOC-0-1000000.csv 过滤空后文件名为 csv/BD_STORDOC-0-1000000.csv.bak
+csv/CHANNEL_ANAIYSIS_TWO-1000000-2000000.csv 过滤空后文件名为 csv/CHANNEL_ANAIYSIS_TWO-1000000-2000000.csv.bak
+csv/IM_ALLOOUT-0-1000000.csv 过滤空后文件名为 csv/IM_ALLOOUT-0-1000000.csv.bak
+csv/IM_PURCHASE_B-0-1000000.csv 过滤空后文件名为 csv/IM_PURCHASE_B-0-1000000.csv.bak
+csv/ST_SUBCURRENTSTOCK-0-1000000.csv 过滤空后文件名为 csv/ST_SUBCURRENTSTOCK-0-1000000.csv.bak
+csv/ST_CURRENTSTOCK-0-1000000.csv 过滤空后文件名为 csv/ST_CURRENTSTOCK-0-1000000.csv.bak
+csv/IM_PURCHASE-0-1000000.csv 过滤空后文件名为 csv/IM_PURCHASE-0-1000000.csv.bak
+csv/CHANNEL_ANAIYSIS_TWO-0-1000000.csv 过滤空后文件名为 csv/CHANNEL_ANAIYSIS_TWO-0-1000000.csv.bak
+csv/IM_SALESUMDATA-0-1000000.csv 过滤空后文件名为 csv/IM_SALESUMDATA-0-1000000.csv.bak
+csv/IM_SALESUMDATA-2000000-3000000.csv 过滤空后文件名为 csv/IM_SALESUMDATA-2000000-3000000.csv.bak
+csv/IM_SALESUMDATA-1000000-2000000.csv 过滤空后文件名为 csv/IM_SALESUMDATA-1000000-2000000.csv.bak
+csv/IM_SALESUMDATA-4000000-5000000.csv 过滤空后文件名为 csv/IM_SALESUMDATA-4000000-5000000.csv.bak
+csv/IM_SALESUMDATA-3000000-4000000.csv 过滤空后文件名为 csv/IM_SALESUMDATA-3000000-4000000.csv.bak
+csv/IM_SALEOUT-1000000-2000000.csv 过滤空后文件名为 csv/IM_SALEOUT-1000000-2000000.csv.bak
+csv/IM_SALEOUT_B-0-1000000.csv 过滤空后文件名为 csv/IM_SALEOUT_B-0-1000000.csv.bak
+csv/IM_SALEOUT_B-1000000-2000000.csv 过滤空后文件名为 csv/IM_SALEOUT_B-1000000-2000000.csv.bak
+csv/IM_SALEOUT-0-1000000.csv 过滤空后文件名为 csv/IM_SALEOUT-0-1000000.csv.bak
+exec-date-task1: 320551ms
+成功压缩文件列表
+ csv/BD_DEPACTIVITIES_B-0-1000000.csv.bak
+csv/BD_STORDOC-0-1000000.csv.bak
+csv/CHANNEL_ANAIYSIS_TWO-0-1000000.csv.bak
+csv/CHANNEL_ANAIYSIS_TWO-1000000-2000000.csv.bak
+csv/CHANNEL_BANDCHANNEL-0-1000000.csv.bak
+csv/CHANNEL_FOURGCHANNEL-0-1000000.csv.bak
+csv/CHANNEL_NUMBERCHANNEL-0-1000000.csv.bak
+csv/CHANNEL_RANKING-0-1000000.csv.bak
+csv/IM_ALLOOUT-0-1000000.csv.bak
+csv/IM_ALLOOUT_B-0-1000000.csv.bak
+csv/IM_PURCHASE-0-1000000.csv.bak
+csv/IM_PURCHASE_B-0-1000000.csv.bak
+csv/IM_SALEOUT-0-1000000.csv.bak
+csv/IM_SALEOUT-1000000-2000000.csv.bak
+csv/IM_SALEOUT_B-0-1000000.csv.bak
+csv/IM_SALEOUT_B-1000000-2000000.csv.bak
+csv/IM_SALESUMDATA-0-1000000.csv.bak
+csv/IM_SALESUMDATA-1000000-2000000.csv.bak
+csv/IM_SALESUMDATA-2000000-3000000.csv.bak
+csv/IM_SALESUMDATA-3000000-4000000.csv.bak
+csv/IM_SALESUMDATA-4000000-5000000.csv.bak
+csv/PUB_FUNPOWER-0-1000000.csv.bak
+csv/ST_CURRENTSTOCK-0-1000000.csv.bak
+csv/ST_SUBCURRENTSTOCK-0-1000000.csv.bak
+
+exec-date-task2: 107179ms
+oracle@192.168.0.90's password:
+exec-date-task3: 341097ms
+{ task1: 200, task2: 200, task3: 200 }
+exec-date-sum: 768926ms
+[root@eteng MysqlDataMigrationToOracle]#
+
+
+
+
+
+
+total 3.5G
+-rw-r--r--. 1 oracle oinstall 3.5G Apr 19 14:46 csv.tar
+
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/PUB_FUNPOWER.ctl direct=true
+SQL*Loader-500: Unable to open file (PUB_FUNPOWER.dat)
+SQL*Loader-553: file not found
+SQL*Loader-509: System error: No such file or directory
+
+Unhandled rejection ctl/PUB_FUNPOWER.ctl
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_PURCHASE.ctl direct=true
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_ALLOOUT_B.ctl direct=true
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/CHANNEL_NUMBERCHANNEL.ctl direct=true
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/ST_CURRENTSTOCK.ctl direct=true
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_ALLOOUT.ctl direct=true
+
+exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_PURCHASE_B.ctl direct=true

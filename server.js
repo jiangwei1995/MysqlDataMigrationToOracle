@@ -7,6 +7,7 @@ var exportTools = require('./exportTools');
 var importTools = require('./importTools');
 var config = require('./config.json');
 var fs = require('fs');
+var mysqlPool =require('./mysqlPool');
 var number = 100;
 
 // 生成csv文件
@@ -125,6 +126,48 @@ function generateImportJson(){
     })
   })
 }
+
+function allColumns(callback){
+     exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+       callback(null,result);
+    },function(err){
+      callback(err);
+  })
+}
+function columnsisnull(callback){
+    exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+       callback(null,result);
+    },function(err){
+      callback(err);
+    })
+
+}
+//生成导入需要的json 内容包含 表名，列名,不能为空的列
+function testc(){
+  async.parallel({
+    "all":function(callback){
+      allColumns(callback);
+    },
+    "isnull":function(callback){
+      columnsisnull(callback);
+    }
+  },function(err,result){
+   mysqlPool.pool.end();
+  var isnull = _.keyBy(result["isnull"],'tableName');
+  var arrData = _.reduce(result["all"],function(mome,item,index){
+
+    var tmp = _.assignInWith(item,isnull[item.tableName]);
+    mome.push(tmp);
+    return mome;
+  },[])
+    fs.writeFile('importTableName.json',JSON.stringify(arrData,null,4),function(err){
+      if (err) throw err;
+      console.log("generateJson-Scuess");
+      generateImportJsonFiles();
+    })
+  })
+}
+
 //重新生成导入需要的json 内容添加了文件名数组
 function generateImportJsonFiles(){
   var importTableArr = require('./importTableName');
@@ -154,10 +197,30 @@ function indexOfToArr(arr,str){
 function generateCtl(){
   var importTableArr = require('./importTableName');
   for (var i = 0; i < importTableArr.length; i++) {
-    importTools.generateSrcipt(importTableArr[i].tableName,importTableArr[i].columns,importTableArr[i].files)
+    var columns="" ;
+    if(importTableArr[i].nullcolumns){
+      columns = getColumnsData(importTableArr[i].columns,importTableArr[i].nullcolumns,"null-jiege");
+    }else{
+      columns = importTableArr[i].columns;
+    }
+    importTools.generateSrcipt(importTableArr[i].tableName,columns,importTableArr[i].files)
   }
 }
+function getColumnsData(columns,nullcolumns,tag){
+  var newstr="";
+  var nullArr = nullcolumns.split(',');
+  for (var i = 0; i < nullArr.length; i++) {
+     var flg = `${nullArr[i]} "decode(:${nullArr[i]},null, '${tag}', :${nullArr[i]})"`;
+     columns = _.replace(columns,nullArr[i],flg);
+  }
+  return columns;
+}
 
+
+// var str = "PK_INV_STATUES,PK_INVBASDOC,PK_WAREHOUSE,UNSALE,USER_BACK,USER_SAVE,BROKEN_BEFORE,BORKEN_AFTER,EX_CHECK,BORROW,EXCHANGE,DEMONSTRATE,SUM,CORP_ID,TS,DR,TEMP_VAR1,TEMP_VAR2,TEMP_VAR3,TEMP_VAR4,TEMP_VAR5,TEMP_VAR6,TEMP_VAR7,TEMP_INT1,TEMP_INT2,TEMP_INT3,AVAILABLE_SUM";
+// var flg = " \"decode(:vc_attributeName,null, 'none', :vc_attributeName)\"";
+// var index = str.indexOf('PK_INVBASDOC')+"PK_INVBASDOC".length;
+// console.log(insert_flg(str,flg,index));
 function executeCtl(){
    console.time("exec-date");
    console.log("files");
@@ -172,10 +235,11 @@ function executeCtl(){
      })
    })
 }
-exportCsvToServer();
+//exportCsvToServer();
 //start();
 //generateExportJson();
 //generateImportJson();
-//generateCtl();
+//testc();
+generateCtl();
 //executeCtl();
 //exports.a = executeCtl;
