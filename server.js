@@ -325,7 +325,8 @@ function importCsvOracle(){
     console.timeEnd("exec-date");
   })
 }
-importCsvOracle();
+exports.import = importCsvOracle;
+exports.export = exportCsvToServer;
 //exportCsvToServer();
 //start();
 //generateExportJson();
