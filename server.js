@@ -118,13 +118,15 @@ function generateExportJson(){
 }
 //生成导入需要的json 内容包含 表名，列名
 function generateImportJsonA(){
-  exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
-    fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
-      if (err) throw err;
-      console.log("generateJson-Scuess");
-      generateImportJsonFiles();
-    })
+
+    exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+      fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
+        if (err) throw err;
+        console.log("generateJson-Scuess");
+        generateImportJsonFiles();
+      })
   })
+
 }
 
 function allColumns(callback){
@@ -144,43 +146,52 @@ function columnsisnull(callback){
 }
 //生成导入需要的json 内容包含 表名，列名,不能为空的列
 function generateImportJson(){
-  async.parallel({
-    "all":function(callback){
-      allColumns(callback);
-    },
-    "isnull":function(callback){
-      columnsisnull(callback);
-    }
-  },function(err,result){
-   mysqlPool.pool.end();
-  var isnull = _.keyBy(result["isnull"],'tableName');
-  var arrData = _.reduce(result["all"],function(mome,item,index){
+  return new Promise(function(resolve,reject){
+    async.parallel({
+      "all":function(callback){
+        allColumns(callback);
+      },
+      "isnull":function(callback){
+        columnsisnull(callback);
+      }
+    },function(err,result){
+     mysqlPool.pool.end();
+    var isnull = _.keyBy(result["isnull"],'tableName');
+    var arrData = _.reduce(result["all"],function(mome,item,index){
 
-    var tmp = _.assignInWith(item,isnull[item.tableName]);
-    mome.push(tmp);
-    return mome;
-  },[])
-    fs.writeFile('importTableName.json',JSON.stringify(arrData,null,4),function(err){
-      if (err) throw err;
-      console.log("generateJson-Scuess");
-      generateImportJsonFiles();
+      var tmp = _.assignInWith(item,isnull[item.tableName]);
+      mome.push(tmp);
+      return mome;
+    },[])
+      fs.writeFile('importTableName.json',JSON.stringify(arrData,null,4),function(err){
+        if (err) reject(err);
+        console.log("generateJson-Scuess");
+        generateImportJsonFiles().then(function(result){
+          resolve(result);
+        },function(err){
+            reject(500);
+        });
+      })
     })
   })
+
 }
 
 //重新生成导入需要的json 内容添加了文件名数组
 function generateImportJsonFiles(){
-  var importTableArr = require('./importTableName');
-  fs.readdir('csv/',function(err,files){
-    var newArr =   _.reduce(importTableArr,function(mome,item){
-        var arr = indexOfToArr(files,item.tableName);
-        item['files'] = arr;
-        mome.push(item);
-        return mome;
-      },[])
-    fs.writeFile('importTableName.json',JSON.stringify(newArr,null,4),function(err){
-      if (err) throw err;
-      console.log("generateJson-Scuess");
+  return new Promise(function(resolve,reject){
+    var importTableArr = require('./importTableName');
+    fs.readdir('csv/',function(err,files){
+      var newArr =   _.reduce(importTableArr,function(mome,item){
+          var arr = indexOfToArr(files,item.tableName);
+          item['files'] = arr;
+          mome.push(item);
+          return mome;
+        },[])
+      fs.writeFile('importTableName.json',JSON.stringify(newArr,null,4),function(err){
+        if (err) reject(500);
+        resolve(200)
+      })
     })
   })
 }
@@ -195,16 +206,36 @@ function indexOfToArr(arr,str){
 }
 //生成导入需要的ctl文件
 function generateCtl(){
-  var importTableArr = require('./importTableName');
-  for (var i = 0; i < importTableArr.length; i++) {
-    var columns="" ;
-    if(importTableArr[i].nullcolumns){
-      columns = getColumnsData(importTableArr[i].columns,importTableArr[i].nullcolumns,"null-jiege");
-    }else{
-      columns = importTableArr[i].columns;
-    }
-    importTools.generateSrcipt(importTableArr[i].tableName,columns,importTableArr[i].files)
-  }
+  return new Promise(function(resolve,reject){
+    var importTableArr = require('./importTableName');
+    var tasks = _.reduce(importTableArr,function(mome,item,i){
+        if(item.nullcolumns){
+          columns = getColumnsData(item.columns,item.nullcolumns,"null-jiege");
+        }else{
+          columns = item.columns;
+        }
+        mome.push(importTools.generateSrcipt(item.tableName,columns,item.files));
+        return mome;
+    },[])
+    Promise.all(tasks).then(function(result){
+      console.log(result);
+      resolve(result);
+    },function(err){
+      reject(err);
+    })
+
+  // var importTableArr = require('./importTableName');
+  // for (var i = 0; i < importTableArr.length; i++) {
+  //   var columns="" ;
+  //   if(importTableArr[i].nullcolumns){
+  //     columns = getColumnsData(importTableArr[i].columns,importTableArr[i].nullcolumns,"null-jiege");
+  //   }else{
+  //     columns = importTableArr[i].columns;
+  //   }
+  //   importTools.generateSrcipt(importTableArr[i].tableName,columns,importTableArr[i].files)
+  // }
+
+  });
 }
 function getColumnsData(columns,nullcolumns,tag){
   var newstr="";
@@ -222,18 +253,20 @@ function getColumnsData(columns,nullcolumns,tag){
 // var index = str.indexOf('PK_INVBASDOC')+"PK_INVBASDOC".length;
 // console.log(insert_flg(str,flg,index));
 function executeCtl(){
-   console.time("exec-date");
-   console.log("files");
-   fs.readdir('ctl/',function(err,files){
-     var tasks = _.reduce(files,function(mome,file){
-       mome.push(importTools.executeSrcipt(`ctl/${file}`));
-       return mome;
-     },[]);
-     Promise.all(tasks).then(function(result){
-       console.log(result);
-       console.timeEnd("exec-date");
-     })
-   })
+  return new Promise(function(resolve,reject){
+     fs.readdir('ctl/',function(err,files){
+      var tasks = _.reduce(files,function(mome,file){
+        mome.push(importTools.executeSrcipt(`ctl/${file}`));
+        return mome;
+      },[]);
+      Promise.all(tasks).then(function(result){
+        console.log(result);
+        resolve(result);
+      },function(err){
+        reject(err);
+      })
+    })
+  })
 }
 function extractCsv(){
   return new Promise(function(resolve,reject){
