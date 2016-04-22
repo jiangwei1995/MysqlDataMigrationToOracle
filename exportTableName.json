@@ -1,70 +1,66 @@
 [
     {
         "tableName": "IM_SALESUMDATA",
-        "sumLine": 200
+        "sumLine": 4724406
     },
     {
         "tableName": "IM_SALEOUT_B",
-        "sumLine": 200
+        "sumLine": 1833522
     },
     {
         "tableName": "IM_SALEOUT",
-        "sumLine": 200
+        "sumLine": 1646730
     },
     {
         "tableName": "CHANNEL_ANAIYSIS_TWO",
-        "sumLine": 200
+        "sumLine": 1149460
     },
     {
         "tableName": "IM_PURCHASE_B",
-        "sumLine": 200
+        "sumLine": 613281
     },
     {
         "tableName": "ST_SUBCURRENTSTOCK",
-        "sumLine": 200
+        "sumLine": 568948
     },
     {
         "tableName": "ST_CURRENTSTOCK",
-        "sumLine": 200
+        "sumLine": 534245
     },
     {
         "tableName": "IM_ALLOOUT_B",
-        "sumLine": 200
+        "sumLine": 481039
     },
     {
         "tableName": "IM_PURCHASE",
-        "sumLine": 200
+        "sumLine": 458818
     },
     {
         "tableName": "IM_ALLOOUT",
-        "sumLine": 200
+        "sumLine": 329878
     },
     {
         "tableName": "CHANNEL_BANDCHANNEL",
-        "sumLine": 200
+        "sumLine": 130899
     },
     {
         "tableName": "CHANNEL_NUMBERCHANNEL",
-        "sumLine": 200
+        "sumLine": 129381
     },
     {
         "tableName": "CHANNEL_FOURGCHANNEL",
-        "sumLine": 200
+        "sumLine": 126976
     },
     {
         "tableName": "BD_STORDOC",
-        "sumLine": 200
+        "sumLine": 115688
     },
     {
         "tableName": "CHANNEL_RANKING",
-        "sumLine": 200
+        "sumLine": 109394
     },
     {
         "tableName": "BD_DEPACTIVITIES_B",
-        "sumLine": 200
-    },
-    {
-        "tableName": "PUB_FUNPOWER",
-        "sumLine": 200
+        "sumLine": 105174
     }
 ]

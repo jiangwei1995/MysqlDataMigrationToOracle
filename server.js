@@ -8,7 +8,7 @@ var importTools = require('./importTools');
 var config = require('./config.json');
 var fs = require('fs');
 var mysqlPool =require('./mysqlPool');
-var number = 100;
+var number = 1000000;
 
 // 生成csv文件
 function start(){
@@ -33,7 +33,7 @@ function exportCsv(){
   return new Promise(function(resolve,reject){
     var tableArr = require('./exportTableName');
 
-    var tasks = _.reduce(tableArr,function(tmp,parent){
+      var tasks = _.reduce(tableArr,function(tmp,parent){
       var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
         itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
         return itemMome;
@@ -54,6 +54,13 @@ function exportCsvToServer(){
   console.time("exec-date-sum");
    async.series({
      "task1":function(done){
+       generateExportJson().then(function(result){
+         done(null,result);
+       },function(err){
+         done(err);
+       })
+     },
+     "task2":function(done){
        console.time("exec-date-task1");
        exportCsv().then(function(result){
          console.timeEnd("exec-date-task1");
@@ -62,7 +69,7 @@ function exportCsvToServer(){
          done(err)
        });
      },
-     "task2":function(done){
+     "task3":function(done){
        console.time("exec-date-task2");
        exportTools.compressCsv().then(function(result){
         console.timeEnd("exec-date-task2");
@@ -71,7 +78,7 @@ function exportCsvToServer(){
          done(err)
        })
      },
-     "task3":function(done){
+     "task4":function(done){
        console.time("exec-date-task3");
        exportTools.scpCsvToServer().then(function(result){
          console.timeEnd("exec-date-task3");
@@ -109,12 +116,15 @@ function returnArrData(tableName,tableSum){
 }
 //生成导出需要的json文件
 function generateExportJson(){
-  exportTools.generateJson(`select UPPER(table_name) as tableName,table_rows as sumLine from tables where TABLE_SCHEMA = '${config.mysql.dbName}'  and table_rows>100000 order by sumLine DESC;`).then(function(result){
-    fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
-      if (err) throw err;
-      console.log("generateJson-Scuess");
+  return new Promise(function(resolve,reject){
+    exportTools.generateJson(`select UPPER(table_name) as tableName,table_rows as sumLine from tables where TABLE_SCHEMA = '${config.mysql.dbName}'  and table_rows>100000 order by sumLine DESC;`).then(function(result){
+      fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
+        if (err) reject(err);
+        resolve(200);
+      })
     })
   })
+
 }
 //生成导入需要的json 内容包含 表名，列名
 function generateImportJsonA(){
