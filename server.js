@@ -212,8 +212,8 @@ function getColumnsData(columns,nullcolumns,tag){
   var newstr="";
   var nullArr = nullcolumns.split(',');
   for (var i = 0; i < nullArr.length; i++) {
-     var flg = `${nullArr[i]} "decode(:${nullArr[i]},null, '${tag}', :${nullArr[i]})"`;
-     columns = _.replace(columns,nullArr[i],flg);
+     var flg = `${nullArr[i]} "decode(:${nullArr[i]},null, '${tag}', :${nullArr[i]})",`;
+     columns = _.replace(columns,nullArr[i]+',',flg);
   }
   return columns;
 }
