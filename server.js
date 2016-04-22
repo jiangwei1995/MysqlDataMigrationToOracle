@@ -117,7 +117,7 @@ function generateExportJson(){
   })
 }
 //生成导入需要的json 内容包含 表名，列名
-function generateImportJson(){
+function generateImportJsonA(){
   exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
     fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
       if (err) throw err;
@@ -143,7 +143,7 @@ function columnsisnull(callback){
 
 }
 //生成导入需要的json 内容包含 表名，列名,不能为空的列
-function testc(){
+function generateImportJson(){
   async.parallel({
     "all":function(callback){
       allColumns(callback);
@@ -235,11 +235,69 @@ function executeCtl(){
      })
    })
 }
+function extractCsv(){
+  return new Promise(function(resolve,reject){
+    process.exec('tar xvf csv/csv.tar',
+      function(error, stdout, stderr){
+        if(error !== null) {
+          console.log('exec error: ' + error);
+          reject(500);
+        }
+        resolve(200);
+    });
+  })
+
+}
+function importCsvOracle(){
+  console.time("exec-date");
+  async.series({
+    "task1":function(callback){
+      console.time("task1-exec-date");
+      extractCsv().then(function(result){
+        console.timeEnd("task1-exec-date");
+        callback(null,result);
+      },function(err){
+        callback(err);
+      })
+    },
+    "task2":function(callback){
+      console.time("task2-exec-date");
+      generateImportJson().then(function(result){
+        callback(null,result);
+        console.timeEnd("task2-exec-date");
+      },function(err){
+        callback(err);
+      })
+    },
+    "task3":function(callback){
+      console.time("task3-exec-date");
+      generateCtl().then(function(result){
+        console.timeEnd("task3-exec-date");
+        callback(null,result);
+      },function(err){
+        callback(err);
+      })
+    },
+    "task4":function(callback){
+      console.time("task4-exec-date");
+      executeCtl().then(function(result){
+        console.timeEnd("task4-exec-date");
+        callback(null,result);
+      },function(err){
+        callback(err);
+      })
+    },
+  },function(err,result){
+    console.log(result);
+    console.timeEnd("exec-date");
+  })
+}
+importCsvOracle();
 //exportCsvToServer();
 //start();
 //generateExportJson();
 //generateImportJson();
 //testc();
-generateCtl();
+//generateCtl();
 //executeCtl();
 //exports.a = executeCtl;

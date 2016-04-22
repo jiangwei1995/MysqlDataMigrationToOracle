@@ -130,3 +130,27 @@ exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/
 exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_ALLOOUT.ctl direct=true
 
 exec error: Error: Command failed: /bin/sh -c sqlldr etdj/etdj@etda control=ctl/IM_PURCHASE_B.ctl direct=true
+
+
+
+
+
+
+
+select count(*) from ST_SUBCURRENTSTOCK; --ok
+select count(*) from ST_CURRENTSTOCK; --ok
+select count(*) from PUB_FUNPOWER; --没数据
+select count(*) from IM_SALESUMDATA; --ok
+select count(*) from IM_SALEOUT_B; --ok
+select count(*) from IM_SALEOUT; --ok
+select count(*) from IM_PURCHASE_B; --ok
+select count(*) from IM_PURCHASE; --ok
+select count(*) from IM_ALLOOUT_B; --ok
+select count(*) from IM_ALLOOUT; --ok
+select count(*) from CHANNEL_RANKING; --ok
+select count(*) from CHANNEL_NUMBERCHANNEL; --少一条数据
+select count(*) from CHANNEL_FOURGCHANNEL; --ok
+select count(*) from CHANNEL_BANDCHANNEL; --ok
+select count(*) from CHANNEL_ANAIYSIS_TWO; --ok
+select count(*) from BD_STORDOC; --ok
+select count(*) from BD_DEPACTIVITIES_B; --ok
