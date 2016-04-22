@@ -9,7 +9,7 @@ var config = require('./config.json');
 var fs = require('fs');
 var mysqlPool =require('./mysqlPool');
 //一个csv文件的行数
-var number = 10000;
+var number = 1000000;
 //不能为空的字段替换的字符
 var strnull = 'null-jiege';
 
