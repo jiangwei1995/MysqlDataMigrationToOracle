@@ -1,19 +1,20 @@
 var mysql = require('mysql');
 var Promise = require('bluebird');
+var config = require('./config');
 var conn = mysql.createConnection({
-    host: '192.168.0.200',
-    user: 'root',
-    password: 'eteng',
+    host: config.mysql.host,
+    user: config.mysql.userName,
+    password: config.mysql.password,
     database:'information_schema',
-    port: 3306
+    port: config.mysql.post
 });
 this.pool = mysql.createPool(
     {
-      host: '192.168.0.200',
-      user: 'root',
-      password: 'eteng',
+      host: config.mysql.host,
+      user: config.mysql.userName,
+      password: config.mysql.password,
       database:'information_schema',
-      port: 3306
+      port: config.mysql.post,
     }
 );
 var em = this;
