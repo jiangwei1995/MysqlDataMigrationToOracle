@@ -9,7 +9,7 @@ var config = require('./config.json');
 var fs = require('fs');
 var mysqlPool =require('./mysqlPool');
 //一个csv文件的行数
-var number = 1000000;
+var number = 10000;
 //不能为空的字段替换的字符
 var strnull = 'null-jiege';
 
@@ -81,6 +81,7 @@ function generateExportJson(){
     exportTools.generateJson(`select UPPER(table_name) as tableName,table_rows as sumLine from tables where TABLE_SCHEMA = '${config.mysql.dbName}'  and table_rows>100000 order by sumLine DESC;`).then(function(result){
       fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
         if (err) reject(err);
+        mysqlPool.pool.end();
         resolve(200);
       })
     })
@@ -355,6 +356,14 @@ function importCsvOracle(){
 }
 exports.import = importCsvOracle;
 exports.export = exportCsvToServer;
+exports.e1 = generateExportJson;
+exports.e2 = exportCsv;
+exports.e3 = exportTools.compressCsv;
+exports.e4 = exportTools.scpCsvToServer;
+exports.i1 = extractCsv;
+exports.i2 = generateImportJson;
+exports.i3 = generateCtl;
+exports.i4 = executeCtl;
 //exportCsvToServer();
 //start();
 //generateExportJson();
