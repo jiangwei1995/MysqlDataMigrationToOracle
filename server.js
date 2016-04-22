@@ -8,7 +8,10 @@ var importTools = require('./importTools');
 var config = require('./config.json');
 var fs = require('fs');
 var mysqlPool =require('./mysqlPool');
+//一个csv文件的行数
 var number = 1000000;
+//不能为空的字段替换的字符
+var strnull = 'null-jiege';
 
 // 生成csv文件
 function start(){
@@ -29,10 +32,10 @@ function start(){
   });
 }
 
+//导出csv文件方法
 function exportCsv(){
   return new Promise(function(resolve,reject){
     var tableArr = require('./exportTableName');
-
       var tasks = _.reduce(tableArr,function(tmp,parent){
       var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
         itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
@@ -49,7 +52,10 @@ function exportCsv(){
     });
   })
 }
-
+//task1 生成exportTable.json
+//task2 导出所有csv文件
+//task3 将所有.csv.bak文件打包成tar
+//task4 scp将tar文件传到config里配置的server上
 function exportCsvToServer(){
   console.time("exec-date-sum");
    async.series({
@@ -128,8 +134,7 @@ function generateExportJson(){
 }
 //生成导入需要的json 内容包含 表名，列名
 function generateImportJsonA(){
-
-    exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+    exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
       fs.writeFile('importTableName.json',JSON.stringify(result,null,4),function(err){
         if (err) throw err;
         console.log("generateJson-Scuess");
@@ -140,14 +145,14 @@ function generateImportJsonA(){
 }
 
 function allColumns(callback){
-     exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+     exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
        callback(null,result);
     },function(err){
       callback(err);
   })
 }
 function columnsisnull(callback){
-    exportTools.generateJson("select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='ctrm_develop' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = 'ctrm_develop' and table_rows>100000 ) group by table_name ;").then(function(result){
+    exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
        callback(null,result);
     },function(err){
       callback(err);
@@ -220,7 +225,7 @@ function generateCtl(){
     var importTableArr = require('./importTableName');
     var tasks = _.reduce(importTableArr,function(mome,item,i){
         if(item.nullcolumns){
-          columns = getColumnsData(item.columns,item.nullcolumns,"null-jiege");
+          columns = getColumnsData(item.columns,item.nullcolumns,strnull);
         }else{
           columns = item.columns;
         }
@@ -238,7 +243,7 @@ function generateCtl(){
   // for (var i = 0; i < importTableArr.length; i++) {
   //   var columns="" ;
   //   if(importTableArr[i].nullcolumns){
-  //     columns = getColumnsData(importTableArr[i].columns,importTableArr[i].nullcolumns,"null-jiege");
+  //     columns = getColumnsData(importTableArr[i].columns,importTableArr[i].nullcolumns,strnull);
   //   }else{
   //     columns = importTableArr[i].columns;
   //   }
@@ -280,7 +285,7 @@ function executeCtl(){
 }
 function extractCsv(){
   return new Promise(function(resolve,reject){
-    process.exec('tar xvf csv/csv.tar',
+    process.exec(`tar xvf csv/${config.server.from}`,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);
@@ -291,6 +296,11 @@ function extractCsv(){
   })
 
 }
+
+//task1 解压csv文件夹中tar文件
+//task2 生成importTable.json文件
+//task3 生成所有 表名.ctl文件
+//task4 执行所有的.ctl文件
 function importCsvOracle(){
   console.time("exec-date");
   async.series({

@@ -5,8 +5,10 @@ var process = require('child_process');
 var fs = require('fs');
 var iconv = require('iconv-lite');
 var em = this;
-exports.importCsv = function(tableName){
+var config = require('./config');
 
+//导入csv方法
+exports.importCsv = function(tableName){
   return new Promise(function(resolve,reject){
     em.generateSrcipt(tableName).then(function(result){
       console.log(result);
@@ -17,7 +19,7 @@ exports.importCsv = function(tableName){
     })
   });
 }
-
+//生成ctl文件
 this.generateSrcipt = function(tableName,columns,files){
   return new Promise(function(resolve,reject){
     var fileName = `ctl/${tableName}.ctl`;
@@ -43,11 +45,11 @@ this.generateSrcipt = function(tableName,columns,files){
   })
 
 }
-
+//执行ctl文件
 this.executeSrcipt = function(ctlPath){
   return new Promise(function(resolve,reject){
-    console.log('sqlldr etdj/etdj@etda control='+ctlPath+' direct=true');
-    process.exec('sqlldr etdj/etdj@etda control='+ctlPath+' direct=true',
+    console.log(`sqlldr ${config.oracle.userName}/${config.oracle.password}@${config.oracle.sid} control=${ctlPath} direct=true`);
+    process.exec(`sqlldr ${config.oracle.userName}/${config.oracle.password}@${config.oracle.sid} control=${ctlPath} direct=true`,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);

@@ -37,7 +37,6 @@ this.compressCsv = function(){
 }
 //将文件上次之服务器 配置在config.json文件
 this.scpCsvToServer = function(){
-
   return new Promise(function(resolve,reject){
     process.exec(`scp -P ${config.server.port} ${config.server.from} ${config.server.userName}@${config.server.host}:${config.server.to}`,
       function(error, stdout, stderr){
