@@ -3,12 +3,12 @@ var _ = require('lodash');
 var async = require('async');
 var Promise = require('bluebird');
 var process = require('child_process');
-var mysqlPool = require('./mysqlPool');
-
+var config = require('./config');
+var mysqlClient = `mysql -h ${config.mysql.host} -u ${config.mysql.userName} --password=${config.mysql.password} ${config.mysql.dbName} -A -ss -e `;
 //一次导出一个表一部分数据
 this.exportCsv = function(tableName,start,number,csvPath){
   return new Promise(function(resolve,reject){
-    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+' limit '+start+','+ number +';" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
+    process.exec(`${mysqlClient}"SELECT * from ${tableName} limit ${start},${number};" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > ${csvPath}`,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);
@@ -37,7 +37,7 @@ this.compressCsv = function(){
 }
 //将文件上次之服务器 配置在config.json文件
 this.scpCsvToServer = function(){
-  var config = require('./config');
+
   return new Promise(function(resolve,reject){
     process.exec(`scp -P ${config.server.port} ${config.server.from} ${config.server.userName}@${config.server.host}:${config.server.to}`,
       function(error, stdout, stderr){
@@ -52,6 +52,7 @@ this.scpCsvToServer = function(){
 
 //生成导出需要的json文件
 this.generateJson = function(sql){
+  var mysqlPool = require('./mysqlPool');
   return new Promise(function(resolve,reject){
     mysqlPool.poolQuery(sql).then(function(result){
       resolve(result);
@@ -63,7 +64,7 @@ this.generateJson = function(sql){
 //一次导出一个表所有数据
 exports.fullDataExportCsv = function(tableName,csvPath){
   return new Promise(function(resolve,reject){
-    process.exec('mysql -h 192.168.0.200 -u root --password=eteng ctrm_develop -A -ss -e "SELECT * from '+tableName+';" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > '+csvPath,
+    process.exec(`${mysqlClient}"SELECT * from ${tableName};" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > ${csvPath}`,
       function(error, stdout, stderr){
         if (error !== null) {
           console.log('exec error: ' + error);
