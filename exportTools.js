@@ -24,7 +24,7 @@ this.exportCsv = function(tableName,start,number,csvPath){
 //打包csv文件夹中的所有.bak结尾的文件
 this.compressCsv = function(){
   return new Promise(function(resolve,reject){
-    process.exec(`tar -cvf csv.tar csv/*.bak`,
+    process.exec(`tar -cvf ${config.server.from} csv/*.bak`,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);
