@@ -52,52 +52,7 @@ function exportCsv(){
     });
   })
 }
-//task1 生成exportTable.json
-//task2 导出所有csv文件
-//task3 将所有.csv.bak文件打包成tar
-//task4 scp将tar文件传到config里配置的server上
-function exportCsvToServer(){
-  console.time("exec-date-sum");
-   async.series({
-     "task1":function(done){
-       generateExportJson().then(function(result){
-         done(null,result);
-       },function(err){
-         done(err);
-       })
-     },
-     "task2":function(done){
-       console.time("exec-date-task1");
-       exportCsv().then(function(result){
-         console.timeEnd("exec-date-task1");
-         done(null,result)
-       },function(err){
-         done(err)
-       });
-     },
-     "task3":function(done){
-       console.time("exec-date-task2");
-       exportTools.compressCsv().then(function(result){
-        console.timeEnd("exec-date-task2");
-         done(null,result)
-       },function(err){
-         done(err)
-       })
-     },
-     "task4":function(done){
-       console.time("exec-date-task3");
-       exportTools.scpCsvToServer().then(function(result){
-         console.timeEnd("exec-date-task3");
-         done(null,result)
-       },function(err){
-         done(err)
-       })
-     }
-   },function(err,result){
-     console.log(result);
-     console.timeEnd("exec-date-sum");
-   })
-}
+
 
 function start1(){
   console.time("exec-date");
@@ -296,7 +251,56 @@ function extractCsv(){
   })
 
 }
-
+//task1 生成exportTable.json
+//task2 导出所有csv文件
+//task3 将所有.csv.bak文件打包成tar
+//task4 scp将tar文件传到config里配置的server上
+function exportCsvToServer(){
+  console.time("exec-date-sum");
+   async.series({
+     "task1":function(done){
+       console.log("task1-生成exportTable.json");
+       generateExportJson().then(function(result){
+         done(null,result);
+       },function(err){
+         done(err);
+       })
+     },
+     "task2":function(done){
+       console.log("task2-导出所有csv文件");
+       console.time("exec-date-task1");
+       exportCsv().then(function(result){
+         console.timeEnd("exec-date-task1");
+         done(null,result)
+       },function(err){
+         done(err)
+       });
+     },
+     "task3":function(done){
+       console.log("task3-将所有.csv.bak文件打包成tar");
+       console.time("exec-date-task2");
+       exportTools.compressCsv().then(function(result){
+        console.timeEnd("exec-date-task2");
+         done(null,result)
+       },function(err){
+         done(err)
+       })
+     },
+     "task4":function(done){
+       console.log("task4-scp将tar文件传到config里配置的server上");
+       console.time("exec-date-task3");
+       exportTools.scpCsvToServer().then(function(result){
+         console.timeEnd("exec-date-task3");
+         done(null,result)
+       },function(err){
+         done(err)
+       })
+     }
+   },function(err,result){
+     console.log(result);
+     console.timeEnd("exec-date-sum");
+   })
+}
 //task1 解压csv文件夹中tar文件
 //task2 生成importTable.json文件
 //task3 生成所有 表名.ctl文件
@@ -305,6 +309,7 @@ function importCsvOracle(){
   console.time("exec-date");
   async.series({
     "task1":function(callback){
+      console.log("task1-解压csv文件夹中tar文件");
       console.time("task1-exec-date");
       extractCsv().then(function(result){
         console.timeEnd("task1-exec-date");
@@ -314,6 +319,7 @@ function importCsvOracle(){
       })
     },
     "task2":function(callback){
+      console.log("task2-生成importTable.json文件");
       console.time("task2-exec-date");
       generateImportJson().then(function(result){
         callback(null,result);
@@ -323,6 +329,7 @@ function importCsvOracle(){
       })
     },
     "task3":function(callback){
+      console.log("task3-生成所有 表名.ctl文件");
       console.time("task3-exec-date");
       generateCtl().then(function(result){
         console.timeEnd("task3-exec-date");
@@ -332,6 +339,7 @@ function importCsvOracle(){
       })
     },
     "task4":function(callback){
+      console.log("task4-执行所有的.ctl文件");
       console.time("task4-exec-date");
       executeCtl().then(function(result){
         console.timeEnd("task4-exec-date");
