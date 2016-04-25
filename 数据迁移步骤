@@ -1,0 +1,111 @@
+修改oracle数据库字符集
+>shutdown immediate; (把database停了)
+>startup mount; (把database重开去可更改情況)
+>alter system enable restricted session;
+>alter system set job_queue_processes=0;
+>alter system set aq_tm_processes=0;
+>alter database open;
+>alter database character set utf8;
+OR
+>alter database character set internal_use utf8;
+>shutdown immediate;
+>startup; (重开正常oracle)
+
+
+1.查看mysql记录数大于10w的表，进行单独导出导入
+use information_schema;
+select UPPER(table_name),table_rows from tables
+where TABLE_SCHEMA = 'ctrm_develop'  and table_rows>100000
+order by table_name ASC;
+结果集
+table_name        table_rows
+
+BD_DEPACTIVITIES_B	105174
+BD_STORDOC	116356
+CHANNEL_ANAIYSIS_TWO	1149460
+CHANNEL_BANDCHANNEL	128700
+CHANNEL_FOURGCHANNEL	126976
+CHANNEL_NUMBERCHANNEL	129381
+CHANNEL_RANKING	109394
+IM_ALLOOUT	329878
+IM_ALLOOUT_B	481039
+IM_PURCHASE	458818
+IM_PURCHASE_B	613281
+IM_SALEOUT	1646730
+IM_SALEOUT_B	1833522
+IM_SALESUMDATA	4724406
+PUB_FUNPOWER	119671
+ST_CURRENTSTOCK	534245
+ST_SUBCURRENTSTOCK	568948
+
+
+2.所有表结构导入oracle
+用时大概36秒
+检查表个数 ，每个表记录是否大于0
+
+select t.table_name ,t.num_rows from user_tables t where t.NUM_ROWS>0;
+ 或者
+ create or replace function count_rows(table_name in varchar2,
+                              owner in varchar2 default null)
+return number
+authid current_user
+IS
+   num_rows number;
+   stmt varchar2(2000);
+begin
+   if owner is null then
+      stmt := 'select count(*) from "'||table_name||'"';
+   else
+      stmt := 'select count(*) from "'||owner||'"."'||table_name||'"';
+   end if;
+   execute immediate stmt into num_rows;
+   return num_rows;
+end;
+在执行
+ select table_name, count_rows(table_name) nrows from user_tables;
+
+删除表命令
+--select 'DROP TABLE '||TABLE_NAME||';' from user_tables where table_name in (select t.table_name from user_tables t);
+--select '"'||TABLE_NAME||'",' from user_tables where table_name in (select t.table_name from user_tables t);
+3.切换表空间
+
+--赋权限
+--grant all privileges to etdj;
+
+查看所有表空间
+select tablespace_name from dba_tablespaces ;
+新建表空间
+create tablespace test  datafile '/home/oracle/app/oracle/oradata/etda/test.dbf'   size 1500M   autoextend on next 5M maxsize 3000M;
+查看所有表空间
+用sysdba用户登录执行
+select t1.name,t2.name from v$tablespace t1,v$datafile t2 where t1.ts# =t2.ts#;
+切换表空间
+alter table 表名  move TABLESPACE 表空间名;
+--删除表空间
+--DROP TABLESPACE test INCLUDING CONTENTS AND DATAFILES;
+为小于10w数据的表切换表空间
+select 'alter table '||TABLE_NAME||' move tablespace MINTABLE;' from user_tables where table_name not in ('BD_DEPACTIVITIES_B','BD_STORDOC','CHANNEL_ANAIYSIS_TWO','CHANNEL_FOURGCHANNEL','CHANNEL_BANDCHANNEL','CHANNEL_NUMBERCHANNEL','CHANNEL_RANKING','IM_ALLOOUT','IM_ALLOOUT_B','IM_PURCHASE','IM_PURCHASE_B','IM_SALEOUT','IM_SALEOUT_B','IM_SALESUMDATA','PUB_FUNPOWER','ST_CURRENTSTOCK','ST_SUBCURRENTSTOCK');
+为大于10w数据的表切换表空间
+
+4.直接导入小于10W条的表的数据
+
+
+
+创建表空间
+create tablespace 表空间名  datafile 物理地址   size 初始大小   autoextend on next 每次递增  maxsize 最大值;
+create tablespace test  datafile '/home/oracle/app/oracle/oradata/etda/test.dbf'   size 1500M   autoextend on next 5M maxsize 3000M;
+
+删除索引
+drop index 索引名;
+创建索引
+1、创建索引的标准语法
+   CREATE INDEX 索引名 ON 表名 (列名)TABLESPACE 表空间名;
+2、创建唯一索引
+  CREATE unique INDEX 索引名 ON 表名 (列名)TABLESPACE 表空间名;
+3、创建组合索引
+  CREATE INDEX 索引名 ON 表名 (列名1,列名2)TABLESPACE 表空间名;
+4、创建反向键索引
+   CREATE INDEX 索引名 ON 表名 (列名) reverse TABLESPACE 表空间名;
+
+切换索引表空间
+  alter index index_uniquen_emp_no rebuild TABLESPACE test;
