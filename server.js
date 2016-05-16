@@ -101,11 +101,14 @@ function generateImportJsonA(){
 }
 
 function allColumns(callback){
-     exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
-       callback(null,result);
-    },function(err){
-      callback(err);
-  })
+    exportTools.generateJson('SET group_concat_max_len = 102400;').then(function(){
+      exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
+         callback(null,result);
+      },function(err){
+        callback(err);
+      })
+    });
+
 }
 function columnsisnull(callback){
     exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>100000 ) group by table_name ;`).then(function(result){
