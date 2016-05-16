@@ -46,6 +46,7 @@ function exportCsv(){
     },[]);
     console.log(_.flatten(tasks).length);
     Promise.all(_.flatten(tasks)).then(function(result){
+      console.timeEnd("task2-exec-date");
       resolve(200);
     },function(err){
       reject(500);
@@ -82,6 +83,7 @@ function generateExportJson(){
       fs.writeFile('exportTableName.json',JSON.stringify(result,null,4),function(err){
         if (err) reject(err);
         mysqlPool.pool.end();
+        console.timeEnd("task1-exec-date");
         resolve(200);
       })
     })
@@ -141,6 +143,7 @@ function generateImportJson(){
         if (err) reject(err);
         console.log("generateJson-Scuess");
         generateImportJsonFiles().then(function(result){
+          console.timeEnd("task2-exec-date");
           resolve(result);
         },function(err){
             reject(500);
@@ -192,6 +195,7 @@ function generateCtl(){
         return mome;
     },[])
     Promise.all(tasks).then(function(result){
+      console.timeEnd("task3-exec-date");
       console.log(result);
       resolve(result);
     },function(err){
@@ -234,6 +238,7 @@ function executeCtl(){
         return mome;
       },[]);
       Promise.all(tasks).then(function(result){
+        console.timeEnd("task4-exec-date");
         console.log(result);
         resolve(result);
       },function(err){
@@ -250,6 +255,7 @@ function extractCsv(){
           console.log('exec error: ' + error);
           reject(500);
         }
+        console.timeEnd("task1-exec-date");
         resolve(200);
     });
   })
@@ -263,6 +269,7 @@ function exportCsvToServer(){
   console.time("exec-date-sum");
    async.series({
      "task1":function(done){
+       console.time("task1-exec-date");
        console.log("task1-生成exportTable.json");
        generateExportJson().then(function(result){
          done(null,result);
@@ -272,9 +279,8 @@ function exportCsvToServer(){
      },
      "task2":function(done){
        console.log("task2-导出所有csv文件");
-       console.time("exec-date-task1");
+       console.time("task2-exec-date");
        exportCsv().then(function(result){
-         console.timeEnd("exec-date-task1");
          done(null,result)
        },function(err){
          done(err)
@@ -282,9 +288,8 @@ function exportCsvToServer(){
      },
      "task3":function(done){
        console.log("task3-将所有.csv.bak文件打包成tar");
-       console.time("exec-date-task2");
+       console.time("task3-exec-date");
        exportTools.compressCsv().then(function(result){
-        console.timeEnd("exec-date-task2");
          done(null,result)
        },function(err){
          done(err)
@@ -292,9 +297,8 @@ function exportCsvToServer(){
      },
      "task4":function(done){
        console.log("task4-scp将tar文件传到config里配置的server上");
-       console.time("exec-date-task3");
+       console.time("task4-exec-date");
        exportTools.scpCsvToServer().then(function(result){
-         console.timeEnd("exec-date-task3");
          done(null,result)
        },function(err){
          done(err)
@@ -316,7 +320,6 @@ function importCsvOracle(){
       console.log("task1-解压csv文件夹中tar文件");
       console.time("task1-exec-date");
       extractCsv().then(function(result){
-        console.timeEnd("task1-exec-date");
         callback(null,result);
       },function(err){
         callback(err);
@@ -327,7 +330,6 @@ function importCsvOracle(){
       console.time("task2-exec-date");
       generateImportJson().then(function(result){
         callback(null,result);
-        console.timeEnd("task2-exec-date");
       },function(err){
         callback(err);
       })
@@ -336,7 +338,6 @@ function importCsvOracle(){
       console.log("task3-生成所有 表名.ctl文件");
       console.time("task3-exec-date");
       generateCtl().then(function(result){
-        console.timeEnd("task3-exec-date");
         callback(null,result);
       },function(err){
         callback(err);
@@ -346,7 +347,6 @@ function importCsvOracle(){
       console.log("task4-执行所有的.ctl文件");
       console.time("task4-exec-date");
       executeCtl().then(function(result){
-        console.timeEnd("task4-exec-date");
         callback(null,result);
       },function(err){
         callback(err);

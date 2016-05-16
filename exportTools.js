@@ -30,6 +30,7 @@ this.compressCsv = function(){
           console.log('exec error: ' + error);
           reject(500);
         }
+        console.timeEnd("task3-exec-date");
         console.log("成功压缩文件列表\n",stdout);
         resolve(200);
     });
@@ -44,6 +45,7 @@ this.scpCsvToServer = function(){
           console.log('exec error: ' + error);
           reject(500);
         }
+        console.timeEnd("task4-exec-date");
         resolve(200);
     });
   })
