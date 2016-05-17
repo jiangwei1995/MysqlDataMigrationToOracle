@@ -38,7 +38,7 @@ function exportCsv(){
     var tableArr = require('./exportTableName');
       var tasks = _.reduce(tableArr,function(tmp,parent){
       var itemTasks =  _.reduce(returnArrData(parent.tableName,parent.sumLine),function(itemMome,item){
-        itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName));
+        itemMome.push(exportTools.exportCsv(item.tableName, item.start, number, item.csvName,parent.where));
         return itemMome;
       },[]);
       tmp.push(itemTasks);

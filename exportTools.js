@@ -6,9 +6,10 @@ var process = require('child_process');
 var config = require('./config');
 var mysqlClient = `mysql -h ${config.mysql.host} -u ${config.mysql.userName} --password=${config.mysql.password} ${config.mysql.dbName} -A -ss -e `;
 //一次导出一个表一部分数据
-this.exportCsv = function(tableName,start,number,csvPath){
+this.exportCsv = function(tableName,start,number,csvPath,where){
   return new Promise(function(resolve,reject){
-    process.exec(`${mysqlClient}"SELECT * from ${tableName} limit ${start},${number};" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > ${csvPath}`,
+    console.log(`${mysqlClient}"SELECT * from ${tableName} ${where || '' } limit ${start},${number};" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > ${csvPath}`);
+    process.exec(`${mysqlClient}"SELECT * from ${tableName} ${where || '' } limit ${start},${number};" | sed \'s/"/""/g;s/\\t/","/g;s/^/"/;s/$/"/;s/\\n//g\' > ${csvPath}`,
       function(error, stdout, stderr){
         if(error !== null) {
           console.log('exec error: ' + error);
