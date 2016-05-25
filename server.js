@@ -662,7 +662,9 @@ function generateCtl(){
         }else{
           columns = item.columns;
         }
-        mome.push(importTools.generateSrcipt(item.tableName,columns,item.files));
+        if (item.files.length>0) {
+            mome.push(importTools.generateSrcipt(item.tableName,columns,item.files));
+        }
         return mome;
     },[])
     Promise.all(tasks).then(function(result){
