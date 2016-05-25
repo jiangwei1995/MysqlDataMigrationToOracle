@@ -575,7 +575,7 @@ function generateImportJsonA(){
 
 function allColumns(callback){
     exportTools.generateJson('SET group_concat_max_len = 102400;').then(function(){
-      exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>0 ) group by table_name ;`).then(function(result){
+      exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as columns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' ) group by table_name ;`).then(function(result){
          callback(null,result);
       },function(err){
         callback(err);
@@ -584,7 +584,7 @@ function allColumns(callback){
 
 }
 function columnsisnull(callback){
-    exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' and table_rows>0 ) group by table_name ;`).then(function(result){
+    exportTools.generateJson(`select UPPER(table_name) as tableName,GROUP_CONCAT(DISTINCT column_name ORDER BY ORDINAL_POSITION ASC) as nullcolumns from information_schema.columns  where TABLE_SCHEMA='${config.mysql.dbName}' and is_nullable='NO' and TABLE_name in  (select table_name from information_schema.tables  where TABLE_SCHEMA = '${config.mysql.dbName}' ) group by table_name ;`).then(function(result){
        callback(null,result);
     },function(err){
       callback(err);
@@ -646,7 +646,7 @@ function generateImportJsonFiles(){
 //一个数组每个元素中查找 str，把不包含换素删除，返回结果为数组
 function indexOfToArr(arr,str){
   return _.reduce(arr,function(mome,item){
-    if(item.indexOf(str+"-")>-1&&item.lastIndexOf('.bak')>-1){
+    if(item.indexOf(str.toLocaleLowerCase()+"-")>-1&&item.lastIndexOf('.bak')>-1){
       mome.push(item);
     }
     return mome;
